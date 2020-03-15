@@ -3,6 +3,7 @@
   Module for measuring fluid level and report back over NMEA2000 using the NMEA 2000 library found here https://github.com/ttlappalainen/NMEA2000
   Created by Christian Olsman 11 of March 2020.
 
+
 */
 
 #include <Arduino.h>
@@ -10,7 +11,6 @@
 //#include <NMEA2000_CAN.h>  // Uncomment for running on e,g. ESP32.  This will automatically choose right CAN library and create suitable NMEA2000 object
 #include <N2kMessages.h>
 #include "Tank.h"
-#include <Vector.h>
 
 //#define CALIBRATION  
 #define DataUpdatePeriod 2000

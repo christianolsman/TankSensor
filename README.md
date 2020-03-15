@@ -1,11 +1,11 @@
 # TankSensor
 Arduino project for Teensy to publish Fluid tank levels on NMEA 2000 network
 
-#How it works
+# How it works
 The project is suppport resistive tank sensors e.g. 0-190 Ohm. The tanks could ether be of linear shape where dVolume/dResistance is constant, or nonlinear, where calibration points instead are used. 
 
 
-#How to configure
+# How to configure
 
 For linear tanks: 
 Use the constructor: Tank waterTank(20, N2kft_Water, 0, 100, 3.31, 217, 186.62)

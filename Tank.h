@@ -11,7 +11,6 @@
 
 #include "Arduino.h"
 #include <N2kMessages.h>
-#include <Vector.h>
 
 class Tank{
   public:
