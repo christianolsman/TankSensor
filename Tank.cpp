@@ -31,6 +31,7 @@ void Tank::init(int pin, tN2kFluidType fluidType, int instance, float capacity, 
   _instance = instance;
   _levelPercent = 0;
   _capacity = capacity;
+  _fluidType = fluidType;
   _voltage = voltage;
   _resistor = resistor;
   _resistor_tank_max = resistor_tank_max;

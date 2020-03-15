@@ -12,24 +12,28 @@
 #include <N2kMessages.h>
 #include "Tank.h"
 
+
 //#define CALIBRATION  
-#define DataUpdatePeriod 2000
+#define DataUpdatePeriodQuick 2000
+#define DataUpdatePeriodSlow 60000
 
 tNMEA2000_teensy NMEA2000;
-long lastUpdate;
+long lastUpdateQuick;
+long lastUpdateSlow;
+ 
 
 float resistance_mapping [][2] = {{0, 0}, {10, 5}, {50, 10}, {100, 20}, {120, 50}, {150, 90}, {186, 100}};
 Tank waterTank(20, N2kft_Water, 0, 100, 3.31, 217, 186.62, resistance_mapping, sizeof(resistance_mapping) / sizeof(float) / 2);
 
 void setup() {
   // Set Product information
-  NMEA2000.SetN2kCANSendFrameBufSize(100);
+  NMEA2000.SetN2kCANSendFrameBufSize(250);
   NMEA2000.SetProductInformation("00000001", // Manufacturer's Model serial code
                                  100, // Manufacturer's product code
-                                 "Fluid level sensor",  // Manufacturer's Model ID§
-                                 "1.0.0.1 (2020-03-10)",  // Manufacturer's Software version code
-                                 "1.0.0.0 (2020-03-10)" // Manufacturer's Model version
-                                );
+                                 "Tank level sensor",  // Manufacturer's Model ID
+                                 "1.0.0.1 (2020-03-15)",  // Manufacturer's Software version code
+                                 "1.0.0.1 (2020-03-15)" // Manufacturer's Model version
+                                 );
   // Set device information
   NMEA2000.SetDeviceInformation(1, // Unique number. Use e.g. Serial number.
                                 150, // Device function=Devices that measure/report fluid level. See codes on http://www.nmea.org/Assets/20120726%20nmea%202000%20class%20&%20function%20codes%20v%202.00.pdf
@@ -42,18 +46,19 @@ void setup() {
   NMEA2000.SetMode(tNMEA2000::N2km_NodeOnly, 22);
   NMEA2000.Open();
 
-#ifdef CALIBRATION
+//#ifdef CALIBRATION
   Serial.begin(115200);
-#endif
+//#endif
 
-lastUpdate=millis();
+lastUpdateQuick=millis();
+lastUpdateSlow=millis();
 
 }
 
 void loop() {
 
-  if ( lastUpdate + DataUpdatePeriod < millis() ) {
-    lastUpdate = millis();
+  if ( lastUpdateQuick + DataUpdatePeriodQuick < millis() ) {
+    lastUpdateQuick = millis();
 
 #ifdef CALIBRATION //Only call get level function and do not publish on network
     waterTank.getLevel();
@@ -61,6 +66,17 @@ void loop() {
     tN2kMsg N2kMsg;
     SetN2kFluidLevel(N2kMsg, waterTank.getInstance(), waterTank.getFluidType(), waterTank.getLevel(), waterTank.getCapacity());
     NMEA2000.SendMsg(N2kMsg);
+    Serial.println(String(waterTank.getFluidType()) + " " + String(N2kft_Fuel));
+   
 #endif
   }
+
+
+  if ( lastUpdateSlow + DataUpdatePeriodSlow < millis() ) 
+  {
+    lastUpdateSlow = millis();
+    NMEA2000.SendProductInformation();
+
+  }
+  
 }
