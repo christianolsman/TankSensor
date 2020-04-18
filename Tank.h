@@ -25,13 +25,27 @@ Tank(int pin,tN2kFluidType fluidType,int instance, float capacity,float voltage,
     float getLevel();
     void setCapacity(float capacityLitres);
     float getCapacity();
+    float getCurrentVolume();
+    float getPressure();
+    float getTemperature();
+    float getViscosity();
+    String getExtinguishant();
+    void setPressure(float pressure);
+    void setViscosity(float viscosity);
+    void setTemperature(float temperature);
+    void setExtinguishant(String extinguishant);
+    
    
 
   private:
     tN2kFluidType _fluidType;
     int _instance;
     float _levelPercent;
-    float _capacity; 
+    float _capacity;
+    float _pressure;
+    float _temperature;
+    float _viscosity; 
+    String _extinguishant;  //The preferred extinguishant to douse a fire in this tank
     int _pin;
     float _voltage;
     float _resistor;
@@ -43,12 +57,3 @@ Tank(int pin,tN2kFluidType fluidType,int instance, float capacity,float voltage,
   };
 
 #endif
-
-// Input:
-//  - Instance              Tank instance. Different devices handles this a bit differently. So it is best to have instance unique over
-//                          all devices on the bus.
-//  - FluidType             Defines type of fluid. See definition of tN2kFluidType
-//  - Level                 Tank level in % of full tank.
-//  - Capacity              Tank Capacity in litres
-// Output:
-//  - N2kMsg                NMEA2000 message ready to be send.
